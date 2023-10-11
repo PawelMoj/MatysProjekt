@@ -20,7 +20,7 @@ namespace MatysProjekt
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<UserModel>().HasKey(x => x.Id);
-            builder.Entity<UserModel>().
+            builder.Entity<UserModel>().ToTable("Users");
         }
 
 
