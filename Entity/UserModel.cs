@@ -2,7 +2,6 @@
 
 namespace MatysProjekt.Entity
 {
-    []
     public class UserModel
     {
         private string password;
