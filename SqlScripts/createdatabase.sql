@@ -1,11 +1,11 @@
 ﻿IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Users')
 BEGIN
     CREATE TABLE Users (
-        Id INT PRIMARY KEY,
+        Id INT IDENTITY(1,1) PRIMARY KEY,
         Name NVARCHAR(255),
         Email NVARCHAR(255),
         EncryptedPassword NVARCHAR(255),
-        LastLogonAttempt DATETIME
+        LastLogonAttempt NVARCHAR(255)
     );
 END;
 

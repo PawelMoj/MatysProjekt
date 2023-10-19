@@ -8,7 +8,7 @@
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5252",
-      "launchUrl": "api/home"
+      "launchUrl": "api/user"
     },
     "IIS Express": {
       "commandName": "IISExpress",

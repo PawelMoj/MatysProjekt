@@ -1,8 +1,7 @@
-﻿using MatysProjekt.Entity;
+﻿using MatysProjekt.Entity.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
-namespace MatysProjekt
+namespace MatysProjekt.Entity
 {
     public class EntityDbContext : DbContext
     {
@@ -13,7 +12,7 @@ namespace MatysProjekt
         {
         }
 
-        public EntityDbContext(DbContextOptions<EntityDbContext> options) : base(options) 
+        public EntityDbContext(DbContextOptions<EntityDbContext> options) : base(options)
         {
         }
 
@@ -21,10 +20,10 @@ namespace MatysProjekt
         {
             builder.Entity<UserModel>().HasKey(x => x.Id);
             builder.Entity<UserModel>().ToTable("Users");
+
             builder.Entity<ProductModel>().HasKey(x => x.Id);
             builder.Entity<ProductModel>().ToTable("Products");
         }
-
 
     }
 }

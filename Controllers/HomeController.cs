@@ -1,4 +1,5 @@
 ﻿using MatysProjekt.Entity;
+using MatysProjekt.Entity.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MatysProjekt.Controllers

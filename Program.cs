@@ -1,6 +1,5 @@
-using MatysProjekt;
+using MatysProjekt.Entity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +13,19 @@ builder.Services.AddDbContext<EntityDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
     });
 
+
+
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+                      });
+});
+
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -21,7 +33,16 @@ if (app.Environment.IsDevelopment())
     //app.UseAuthentication();
 }
 
-//app.UseHttpsRedirection();
+
+/*
+app.UseCors(x => x
+         .AllowAnyOrigin()
+);
+*/
+
+app.UseCors(MyAllowSpecificOrigins);
+
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
