@@ -1,9 +1,11 @@
 ﻿using MatysProjekt.Entity;
 using MatysProjekt.Entity.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MatysProjekt.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class HomeController : Controller
