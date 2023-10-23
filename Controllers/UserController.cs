@@ -15,7 +15,6 @@ using Microsoft.Net.Http.Headers;
 
 namespace MatysProjekt.Controllers
 {
-    
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : Controller

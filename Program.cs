@@ -8,7 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddDistributedMemoryCache();
 
+builder.Services.AddSession();
 builder.Services.AddDbContext<EntityDbContext>(options => 
     {
         options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
@@ -53,7 +55,7 @@ if (app.Environment.IsDevelopment())
 {
     //app.UseAuthentication();
 }
-
+app.UseSession();
 app.UseCors(MyAllowSpecificOrigins);
 
 app.UseHttpsRedirection();
