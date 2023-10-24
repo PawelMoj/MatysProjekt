@@ -1,4 +1,5 @@
 using MatysProjekt.Entity;
+using MatysProjekt.service;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSingleton<IGameInfoService, GameInfoService>();
 builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession();
