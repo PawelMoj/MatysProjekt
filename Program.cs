@@ -8,15 +8,20 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
+
+
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSingleton<IGameInfoService, GameInfoService>();
-builder.Services.AddDistributedMemoryCache();
 
-builder.Services.AddSession();
+
 builder.Services.AddDbContext<EntityDbContext>(options => 
     {
         options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
     });
+
+
 
 var MyAllowSpecificOrigins = "AngularAppProj";
 builder.Services.AddCors(options =>
@@ -30,6 +35,12 @@ builder.Services.AddCors(options =>
                           .AllowCredentials();
                       });
 });
+
+
+builder.Services.AddSignalR();
+
+
+
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
     options.ConsentCookie.IsEssential = true;
@@ -51,6 +62,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         };
     });
 
+
+
+
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -66,5 +80,29 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+var webSocketOptions = new WebSocketOptions();
+webSocketOptions.AllowedOrigins.Add("http://localhost:4200");
 
+app.UseWebSockets(webSocketOptions);
+app.Use(async (httpContext, next) =>
+{
+    if (httpContext.Request.Path == "/ws")
+    {
+        if (httpContext.WebSockets.IsWebSocketRequest && httpContext.User.Identity.IsAuthenticated)
+        {
+            var socket = await httpContext.WebSockets.AcceptWebSocketAsync();
+            var gameInfoService = (GameInfoService)app.Services.GetService(typeof(IGameInfoService));
+        
+            await gameInfoService.AddUser(socket, httpContext.User?.Identity?.Name);
+        }
+        else
+        {
+            httpContext.Response.StatusCode = 400;
+        }
+    }
+    else
+    {
+        await next();
+    }
+});
 app.Run();

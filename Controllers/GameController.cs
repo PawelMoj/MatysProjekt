@@ -1,4 +1,5 @@
-﻿using MatysProjekt.service;
+﻿using MatysProjekt.helpers;
+using MatysProjekt.service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Concurrent;
@@ -8,43 +9,48 @@ namespace MatysProjekt.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class GameController : Controller
-    {        
-        private static ConcurrentDictionary<Guid, bool> games;
-        private static ConcurrentDictionary<Guid, string> gameSessions;
+    {
         private IHttpContextAccessor http;
+
+
+
+        // servis option 1
         private IGameInfoService _gameInfoService;
+        // helper option 2
+
         public GameController(IHttpContextAccessor http, IGameInfoService gameInfoService)
         {
             this.http = http;
             _gameInfoService = gameInfoService;
-
-            games = new ConcurrentDictionary<Guid, bool>();
-            gameSessions = new ConcurrentDictionary<Guid, string>();
         }
 
         
         [HttpPost("getOponent")]
         public IActionResult GetNewOponent()
         {
+            /*
             string session = HttpContext.Session.Id;
             _gameInfoService.osamitukurwalata(session);
-            /*
+            return Ok();
+            */
+
+            
             try
             {
                 var session = HttpContext.Session.Id;
-                if (games.Any(x => x.Value == false))
+                if (GameInfoHelper.games.Any(x => x.Value == false))
                 {
-                    var gameKey = games.FirstOrDefault(x => x.Value == false).Key; // to gowno globalnie static albo serwis
-                    games.AddOrUpdate(gameKey, false, (k, v) => v = !v);
-                    gameSessions.TryGetValue(gameKey, out string lastSession);
-                    gameSessions.TryUpdate(gameKey, string.Join("+", lastSession, session), lastSession);
+                    var gameKey = GameInfoHelper.games.FirstOrDefault(x => x.Value == false).Key; // to gowno globalnie static albo serwis
+                    GameInfoHelper.games.AddOrUpdate(gameKey, false, (k, v) => v = !v);
+                    GameInfoHelper.gameSessions.TryGetValue(gameKey, out string lastSession);
+                    GameInfoHelper.gameSessions.TryUpdate(gameKey, string.Join("+", lastSession, session), lastSession);
                 }
                 else
                 {
                     var guid = Guid.NewGuid();
-                    games.TryAdd(guid, false);
-                    Console.Write(gameSessions);
-                    gameSessions.TryAdd(guid, session);
+                    GameInfoHelper.games.TryAdd(guid, false);
+                    Console.Write(GameInfoHelper.gameSessions);
+                    GameInfoHelper.gameSessions.TryAdd(guid, session);
                 }
                 return Ok();
             }
@@ -52,7 +58,7 @@ namespace MatysProjekt.Controllers
             {
                 return BadRequest("something went wrong");
             }
-            */
+            
         }
         
     }
